@@ -1,0 +1,52 @@
+﻿@model MVCappTemplate.Models.NieuwsbriefModel
+
+@{
+    ViewData["Title"] = "Nieuwsbrief";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card shadow p-4 mt-4" style="max-width: 600px; width: 100%;">
+        <h2 class="text-center mb-3">Inschrijven voor de nieuwsbrief</h2>
+        <p class="text-muted text-center">Vul je gegevens in. Alle velden zijn verplicht.</p>
+
+        <form asp-action="Nieuwsbrief" method="post" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Voornaam" class="form-label"></label>
+                <input asp-for="Voornaam" class="form-control" />
+                <span asp-validation-for="Voornaam" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Naam" class="form-label"></label>
+                <input asp-for="Naam" class="form-control" />
+                <span asp-validation-for="Naam" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Telefoonnummer" class="form-label"></label>
+                <input asp-for="Telefoonnummer" class="form-control" />
+                <span asp-validation-for="Telefoonnummer" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Geboortedatum" class="form-label"></label>
+                <input asp-for="Geboortedatum" class="form-control" />
+                <span asp-validation-for="Geboortedatum" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Inschrijven</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

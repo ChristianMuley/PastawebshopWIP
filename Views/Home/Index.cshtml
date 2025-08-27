@@ -1,0 +1,100 @@
+﻿@model MVCappTemplate.Models.BestelItem
+@using MVCappTemplate.Models
+
+@{
+ViewData["Title"] = "Bestellen";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card shadow p-4 mt-4" style="max-width: 600px; width: 100%;">
+        <h2 class="text-center mb-4">Bestellen</h2>
+
+        <form asp-controller="Bestelling" asp-action="Toevoegen" method="post" class="mb-3">
+
+            <div class="mb-3">
+                <label asp-for="Pasta" class="form-label">1. Kies de pasta</label>
+                <select asp-for="Pasta" class="form-select"
+                        asp-items="Html.GetEnumSelectList<PastaSoort>()"></select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Grootte" class="form-label">2. Kies de grootte</label>
+                <select asp-for="Grootte" class="form-select"
+                        asp-items="Html.GetEnumSelectList<PortieGrootte>()"></select>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Saus" class="form-label">3. Kies de saus</label>
+                <select asp-for="Saus" class="form-select"
+                        asp-items="Html.GetEnumSelectList<SausType>()"></select>
+            </div>
+
+            <!--Pasta voorbeeld -->
+            <div class="text-center mb-4">
+                <img id="imgCombo" class="img-thumbnail" style="max-width: 260px;" alt="Preview" />
+            </div>
+
+            <div class="d-flex justify-content-center mb-3">
+                <button type="submit" class="btn btn-success w-50">Toevoegen</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+@* Deze Script zorgt ervoor dat we lezen wat de klant ingevoerd heeft en geeft een voorbeeld van het eten | Zelfstudie*@
+@section Scripts {
+<script>
+    @* Array van extensions aangezien ik met meerdere werk, die zullen we later nodig hebben *@ 
+    const exts = ['.jpg', '.jpeg', '.png', '.webp'];
+
+    @* slugger functie *@
+    function toSlug(s) {
+        return (s || '')                    // als null/undefined -> lege string
+            .toString()                     // om zeker te zijn dat het een string is
+            .toLowerCase()                  // alles in lowercase
+    }
+    
+    @* checkt de extensies, als de extensie niet klopt OF er geen afbeedling is, krijgen we een error message *@
+    @* deze was frustrerend *@
+    function tryLoad(basePath, imgEl, i) {
+        if (i >= exts.length) {
+            imgEl.removeAttribute('src');
+            imgEl.alt = 'Afbeelding niet gevonden';
+            return;
+        }
+        
+        const src = `${basePath}${exts[i]}`;
+        imgEl.onerror = () => tryLoad(basePath, imgEl, i + 1); 
+        imgEl.src = src;
+    }
+
+    @* checkt welke pasta+saus de klant genomen heeft en bouwt de juiste geslugde filename *@
+    function updateComboPreview() {
+        const pastaSel = document.getElementById('Pasta');
+        const sausSel  = document.getElementById('Saus');
+        const img      = document.getElementById('imgCombo');
+        if (!pastaSel || !sausSel || !img) return;
+
+        
+        const pasta = toSlug(pastaSel.options[pastaSel.selectedIndex].text);
+        const saus  = toSlug(sausSel.options[sausSel.selectedIndex].text);
+        if (!pasta || !saus) return;
+
+        
+        const base = '@Url.Content("~/img/combo/")' + `${pasta}-${saus}`;
+        tryLoad(base, img, 0);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        ['Pasta', 'Saus'].forEach(id => {
+            const sel = document.getElementById(id);
+            if (sel) sel.addEventListener('change', updateComboPreview);
+        });
+        updateComboPreview(); 
+    });
+</script>
+
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

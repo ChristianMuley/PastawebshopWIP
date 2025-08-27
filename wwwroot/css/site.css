@@ -1,0 +1,71 @@
+main {
+  flex: 1;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* body at least full viewport height */
+  position: relative;
+  background: url('/img/pastabackground.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* 40% black overlay */
+  z-index: -1; /* behind the content */
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+select.form-select {
+  background-color: rgba(215, 86, 19, 0.31); 
+  color: black;     
+  width: 30%;
+  margin: 0 auto;
+  text-align: center;
+  text-align-last: center;
+  display: block;
+}
+
+.form-label{
+  margin: 0 auto;
+  text-align: center;
+  text-align-last: center;
+  display: block;
+}
+
+.footer{
+  color: white;
+  z-index: 1;
+}

@@ -1,0 +1,52 @@
+﻿@model List<MVCappTemplate.Models.BestelItem>
+
+@{
+    ViewData["Title"] = "Mandje";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card shadow p-4 mt-4" style="max-width: 800px; width: 100%;">
+        <h2 class="text-center mb-4">Jouw mandje</h2>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                Je mandje is leeg. <a asp-controller="Home" asp-action="Index" class="alert-link">Bestel nu een pasta</a>.
+            </div>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Pasta</th>
+                    <th>Grootte</th>
+                    <th>Saus</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Pasta</td>
+                        <td>@item.Grootte</td>
+                        <td>@item.Saus</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            <form asp-action="BestellingDoorvoeren" method="post" class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Bestelling doorvoeren</button>
+            </form>
+        }
+        
+        @* toont een dank-u bericht*@
+        @if (TempData["Bedankt"] != null)
+        {
+            <div class="alert alert-success text-center mt-3">
+                @TempData["Bedankt"]
+            </div>
+        }
+    </div>
+</div>

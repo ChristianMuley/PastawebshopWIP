@@ -1,0 +1,15 @@
+﻿@model MVCappTemplate.Models.NieuwsbriefModel
+
+@{
+    ViewData["Title"] = "Inschrijving bevestigd";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card shadow p-4 text-center" style="max-width: 600px; width: 100%;">
+        <h2 class="mb-3">Welkom @Model.Voornaam!</h2>
+        <p class="text-muted mb-4">De nieuwsbrief wordt verstuurd naar <b>@Model.Email</b></p>
+
+        
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary mt-3">Terug naar Bestellen</a>
+    </div>
+</div>
