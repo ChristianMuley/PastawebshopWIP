@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MVCappTemplate.Models
+namespace Pastashop.Models
 {
     public class NieuwsbriefModel
     {

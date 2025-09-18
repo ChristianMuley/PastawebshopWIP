@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\chris\\MVCappTemplate - EIndoefening 2\\MVCappTemplate.csproj": {}
+    "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\MVCappTemplate.csproj": {}
   },
   "projects": {
-    "C:\\Users\\chris\\MVCappTemplate - EIndoefening 2\\MVCappTemplate.csproj": {
+    "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\MVCappTemplate.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\chris\\MVCappTemplate - EIndoefening 2\\MVCappTemplate.csproj",
+        "projectUniqueName": "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\MVCappTemplate.csproj",
         "projectName": "MVCappTemplate",
-        "projectPath": "C:\\Users\\chris\\MVCappTemplate - EIndoefening 2\\MVCappTemplate.csproj",
-        "packagesPath": "C:\\Users\\chris\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\chris\\MVCappTemplate - EIndoefening 2\\obj\\",
+        "projectPath": "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\MVCappTemplate.csproj",
+        "packagesPath": "C:\\Users\\Chris\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\chris\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Chris\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -62,7 +62,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "c:\\program files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

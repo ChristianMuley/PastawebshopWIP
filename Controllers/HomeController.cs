@@ -1,10 +1,11 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MVCappTemplate.Models;
+using Pastashop.Models;
 
-namespace MVCappTemplate.Controllers;
+namespace Pastashop.Controllers;
 
-public class HomeController : Controller
+public class 
+    HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 

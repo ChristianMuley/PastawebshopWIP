@@ -1,4 +1,4 @@
-﻿namespace MVCappTemplate.Models;
+﻿namespace Pastashop.Models;
 
 public class BestelItem
 {
