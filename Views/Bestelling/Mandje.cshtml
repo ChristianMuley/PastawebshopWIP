@@ -22,6 +22,7 @@
                     <th>Pasta</th>
                     <th>Grootte</th>
                     <th>Saus</th>
+                    <th>Aantal</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -31,6 +32,7 @@
                         <td>@item.Pasta</td>
                         <td>@item.Grootte</td>
                         <td>@item.Saus</td>
+                        <td>@item.Aantal</td>
                     </tr>
                 }
                 </tbody>
@@ -38,7 +40,11 @@
 
             <form asp-action="BestellingDoorvoeren" method="post" class="text-center mt-3">
                 <button type="submit" class="btn btn-primary">Bestelling doorvoeren</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary ms-2">Naar bestellen</a>
+                
             </form>
+            
+            
         }
         
         @* toont een dank-u bericht*@

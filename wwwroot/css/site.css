@@ -22,7 +22,7 @@ html {
 }
 
 body {
-
+  
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* body at least full viewport height */
@@ -68,4 +68,11 @@ select.form-select {
 .footer{
   color: white;
   z-index: 1;
+}
+
+
+table.table tbody tr.is-delivered {
+  --bs-table-bg: #abf5ab;
+  --bs-table-striped-bg: #9ebe9e;
+  --bs-table-hover-bg: #8e9a8e;
 }

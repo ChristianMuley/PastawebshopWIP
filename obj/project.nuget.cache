@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "a4dcRjEMUBk=",
+  "dgSpecHash": "5OcfeoC4L8Y=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\Pastashop.csproj",
+  "projectFilePath": "C:\\Users\\Chris\\RiderProjects\\PastawebshopWIP\\Pastashop.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Chris\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Chris\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

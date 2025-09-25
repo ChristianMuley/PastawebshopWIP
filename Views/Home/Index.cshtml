@@ -10,34 +10,57 @@ ViewData["Title"] = "Bestellen";
 
         <form asp-controller="Bestelling" asp-action="Toevoegen" method="post" class="mb-3">
 
+            <!-- Pasta -->
             <div class="mb-3">
                 <label asp-for="Pasta" class="form-label">1. Kies de pasta</label>
                 <select asp-for="Pasta" class="form-select"
                         asp-items="Html.GetEnumSelectList<PastaSoort>()"></select>
             </div>
-
+            
+            <!-- Grootte -->
             <div class="mb-3">
                 <label asp-for="Grootte" class="form-label">2. Kies de grootte</label>
                 <select asp-for="Grootte" class="form-select"
                         asp-items="Html.GetEnumSelectList<PortieGrootte>()"></select>
             </div>
-
+            
+            <!-- Saus -->
             <div class="mb-4">
                 <label asp-for="Saus" class="form-label">3. Kies de saus</label>
                 <select asp-for="Saus" class="form-select"
                         asp-items="Html.GetEnumSelectList<SausType>()"></select>
             </div>
+            
+            <!-- Aantal -->
+            <div class="row g-3 mb-3 justify-content-center">
+                <div class="col-auto text-center">
+                    <label asp-for="Aantal"></label>
+                    <input asp-for="Aantal" class="form-control d-block mx-auto" type="number" min="1" step="1" style="width:40%;"/>
+                    <span asp-validation-for="Aantal" class="text-danger"></span>
+                </div>
+            </div>
 
+            
             <!--Pasta voorbeeld -->
             <div class="text-center mb-4">
                 <img id="imgCombo" class="img-thumbnail" style="max-width: 260px;" alt="Preview" />
             </div>
 
-            <div class="d-flex justify-content-center mb-3">
-                <button type="submit" class="btn btn-success w-50">Toevoegen</button>
+            <!-- Toevoegen & Naar mandje -->
+            @if (TempData["msg"] is string m)
+            {
+                <div class="alert alert-success text-center">@m</div>
+            }
+            <div class="text-center mb-4">
+                <form asp-action="Toevoegen" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-primary">Toevoegen</button>
+                    <a asp-controller="Bestelling" asp-action="Mandje" class="btn btn-outline-secondary ms-2">Naar mandje</a>
+                </form>
             </div>
-
+            
         </form>
+        
     </div>
 </div>
 

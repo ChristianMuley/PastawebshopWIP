@@ -4684,11 +4684,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\Pastashop.csproj",
+      "projectUniqueName": "C:\\Users\\Chris\\RiderProjects\\PastawebshopWIP\\Pastashop.csproj",
       "projectName": "Pastashop",
-      "projectPath": "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\Pastashop.csproj",
+      "projectPath": "C:\\Users\\Chris\\RiderProjects\\PastawebshopWIP\\Pastashop.csproj",
       "packagesPath": "C:\\Users\\Chris\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Chris\\RiderProjects\\MVCEindoefeningPastashop\\obj\\",
+      "outputPath": "C:\\Users\\Chris\\RiderProjects\\PastawebshopWIP\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Chris\\AppData\\Roaming\\NuGet\\NuGet.Config"

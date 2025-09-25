@@ -14,8 +14,8 @@ namespace Pastashop.Controllers
 
         public BestellingController(PastashopBestellingenContext db, IOrderNummerGenerator gen)
         {
-            _db  = db;
-            _gen = gen;
+            _db  = db; //database
+            _gen = gen; //seq36 ordernummer generator
         }
 
         // GET: Winkelmandje (start)
@@ -27,13 +27,14 @@ namespace Pastashop.Controllers
 
         // POST: Winkelmandje (item toevoegen)
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken] // CSRF protection
         public IActionResult Toevoegen(BestelItem item)
         {
-            // lees cart uit session
+            // lees cart uit session + geen double-submit bij refresh
+            // uit session zodat DB niet belaagd wordt met lege carts, zo blijft het ook per user per browser
             var data = HttpContext.Session.GetString("Cart");
             var cart = string.IsNullOrEmpty(data)
-                ? new List<BestelItem>()
+                ? new List<BestelItem>() // als leeg -> nieuwe lege cart
                 : JsonSerializer.Deserialize<List<BestelItem>>(data)!;
 
             // voeg toe
@@ -42,7 +43,9 @@ namespace Pastashop.Controllers
             // schrijf terug naar session
             HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cart));
 
-            return RedirectToAction(nameof(Mandje));
+
+            TempData["msg"] = "Toegevoegd aan je mandje!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Winkelmandje (overzicht)
@@ -61,72 +64,90 @@ namespace Pastashop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> BestellingDoorvoeren()
-        {
+        { 
+            // Mandje van sessie laden
             var data = HttpContext.Session.GetString("Cart");
-            var cart = string.IsNullOrEmpty(data)
-                ? new List<BestelItem>()
-                : JsonSerializer.Deserialize<List<BestelItem>>(data)!;
-
-            if (!cart.Any())
-            {
-                TempData["Bedankt"] = "Je mandje is leeg.";
-                return RedirectToAction(nameof(Mandje));
-            }
-
-            // maak samenvatting per item (bijv. "Spaghetti Groot met Bolognese, Penne Klein met Pesto")
-            var parts = new List<string>();
-            foreach (var i in cart)
-            {
-                parts.Add($"{i.Pasta} {i.Grootte} met {i.Saus}");
-            }
-            var productList = string.Join(", ", parts);
-
-          // totaal aantal items = aantal regels in het mandje
-            var totaalAantal = cart.Count;
-
-            // genereer  ordernummer (BASE36-YY-MM) en bouw entity
-            var bestelling = new Bestelling
-            {
-                OrderNummer = await _gen.GenerateAsync(),
-                Product     = productList,                    // eenvoudig samengevat
-                Aantal      = totaalAantal,
-                Klant       = User?.Identity?.Name ?? "Onbekend",
-                Kommentaar  = null,
-                Datum       = DateTime.UtcNow,
-                SessionId   = HttpContext.Session.Id
-            };
-
-            _db.Bestellingen.Add(bestelling);
-
-            try
-            {
-                await _db.SaveChangesAsync();
-            }
-            // ultra-zeldzame race: uniek index op OrderNummer faalt → probeer 1x opnieuw
-            catch (DbUpdateException ex) when (ex.InnerException?.Message?.Contains("IX_Bestellingen_OrderNummer") == true)
-            {
-                bestelling.OrderNummer = await _gen.GenerateAsync();
-                await _db.SaveChangesAsync();
-            }
-
-            // mandje leeg en bedankje tonen met ordernummer
-            HttpContext.Session.Remove("Cart");
-            TempData["Bedankt"] = $"Bedankt voor je bestelling! 🍝  Order #{bestelling.OrderNummer}";
-
+            var cart = string.IsNullOrEmpty(data) 
+            ? new List<BestelItem>()
+            : JsonSerializer.Deserialize<List<BestelItem>>(data)!;
+        
+       
+        // Geen lege bestellingen!!
+        if (!cart.Any())
+        {
+            TempData["Bedankt"] = "Je mandje is leeg.";
             return RedirectToAction(nameof(Mandje));
         }
 
-        // GET: Nieuwsbrief
-        [HttpGet]
-        public IActionResult Nieuwsbrief() => View();
+    // groepeer gelijke items en tel de aantallen
+    // Werkt nog niet!!
+    var grouped = cart
+        .GroupBy(i => new { i.Pasta, i.Grootte, i.Saus })
+        .Select(g => new { g.Key.Pasta, g.Key.Grootte, g.Key.Saus, Qty = g.Sum(x => x.Aantal) })
+        .ToList();
 
-        // POST: Nieuwsbriefbevestiging
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Nieuwsbrief(NieuwsbriefModel model)
+    // Veranderd elke groep naar string: "Product Grootte Additive Aantal" / Bv "Spaghetti Klein met Pesto x3"
+    var productList  = string.Join(", ", grouped.Select(g => $"{g.Pasta} {g.Grootte} met {g.Saus} ×{g.Qty}"));
+    var totaalAantal = grouped.Sum(g => g.Qty);
+
+    // maak de bestelling
+    var bestelling = new Bestelling
+    {
+        OrderNummer = await _gen.GenerateAsync(), //haalt de volgende gegenereerde Ordernummer
+        Product     = productList,
+        Aantal      = totaalAantal,
+        Klant       = User?.Identity?.Name ?? "Onbekend",
+        Kommentaar  = null,
+        Datum       = DateTime.UtcNow,
+        SessionId   = HttpContext.Session.Id
+    };
+
+    // voeg 1 regel per cart-item toe  
+    foreach (var i in cart)
+    {
+        bestelling.Regels.Add(new BestellingsRegel
         {
-            if (!ModelState.IsValid) return View(model);
-            return View("NieuwsbriefBevestiging", model);
-        }
+            Pasta   = i.Pasta,
+            Grootte = i.Grootte,
+            Saus    = i.Saus,
+            Aantal  = i.Aantal
+        });
+    }
+
+        // Circumventie van 'IDENTITY_INSERT is OFF' fout.
+        // EF behandeld alles als "nieuw"
+        bestelling.Id = 0;
+        foreach (var r in bestelling.Regels) { r.Id = 0; r.BestellingId = 0; }
+
+        // voeg bestelling (met regels) één keer toe en sla één keer op
+        _db.Bestellingen.Add(bestelling);
+
+        // Wat als er 2 requests tergelijk komen voor eenzelfde ordernummer?
+        await _db.SaveChangesAsync();
+    
+    
+  
+
+    // Succes: Verwijderd cart + dank u
+    HttpContext.Session.Remove("Cart");
+    TempData["Bedankt"] = $"Bedankt voor je bestelling!  Order #{bestelling.OrderNummer}";
+    return RedirectToAction(nameof(Mandje));
+    
+    
+    }
+
+
+    // GET: Nieuwsbrief
+    [HttpGet]
+    public IActionResult Nieuwsbrief() => View();
+
+    // POST: Nieuwsbriefbevestiging
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Nieuwsbrief(NieuwsbriefModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+        return View("NieuwsbriefBevestiging", model);
+    }
     }
 }
